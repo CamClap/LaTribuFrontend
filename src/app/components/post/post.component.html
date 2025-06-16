@@ -1,0 +1,9 @@
+<h2>Éditeur</h2>
+<input type="text" [(ngModel)]="postTitle" placeholder="Titre du post" />
+<ckeditor tagName="textarea" [editor]="Editor" (ready)="onReady($event)" [(ngModel)]="editorData" ></ckeditor>
+
+
+<button (click)="createPost()">Valide</button>
+<hr />
+<h3>Prévisualisation</h3>
+<div [innerHTML]="editorData"></div>

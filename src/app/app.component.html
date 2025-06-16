@@ -1,0 +1,34 @@
+<nav class="bg-white border-b border-gray-200 shadow-sm">
+  <div class="w-full px-1">
+    <div class="flex h-16 justify-between ">
+
+      <!-- Left: Logo + Votre Famille -->
+      <div class="flex items-center space-x-6">
+        <a routerLink="/" class="flex items-center">
+          <img class="h-12 w-12 rounded-full object-cover"  src="tribe.png" alt="Logo">
+        </a>
+        <a routerLink="/" class="text-gray-600 hover:text-blue-600 text-sm font-medium">Votre Famille</a>
+      </div>
+
+      <!-- Right: Authenticated or Not -->
+      <div class="flex items-center space-x-4">
+        @if (authenticationService.connectedPerson | async ; as person) {
+        <img [src]="userPicture" (error)="onPhotoError($event)" alt="Photo de profil"
+          class="w-9 h-9 rounded-full object-cover border border-gray-300" />
+
+        <button (click)="authenticationService.logout()"
+          class="bg-blue-600 text-white px-3 py-1.5 rounded-md text-sm hover:bg-blue-700 transition">
+          Déconnexion
+        </button>
+        }
+        @else {
+        <a routerLink="/login" class="text-sm text-gray-600 hover:text-blue-600">Connexion</a>
+        <a routerLink="/signup" class="text-sm text-gray-600 hover:text-blue-600">Inscription</a>
+        }
+      </div>
+
+    </div>
+  </div>
+</nav>
+
+<router-outlet />

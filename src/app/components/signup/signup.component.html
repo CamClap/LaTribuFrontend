@@ -1,0 +1,63 @@
+<form [formGroup]="userFormGroup" >
+  <div class="space-y-12">
+    <div class="border-b border-gray-900/10 pb-12">
+      <h2 class="text-base font-semibold text-gray-900">Inscription</h2>
+
+      <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <div class="sm:col-span-4">
+          <!-- Nom -->
+          <label for="name" class="block text-sm font-medium text-gray-900">Nom</label>
+          <div class="mt-2">
+            <div class="flex items-center rounded-md bg-white pl-3 outline-1 outline-gray-300 focus:outline-indigo-600">
+              <span class="text-base text-gray-500 select-none">workcation.com/</span>
+              <input id="name" formControlName="name" pInputText placeholder="janesmith" class="w-full" />
+            </div>
+          </div>
+
+          <!-- Surnom -->
+          <label for="nickname" class="block text-sm font-medium text-gray-900">Surnom</label>
+          <div class="mt-2">
+            <div class="flex items-center rounded-md bg-white pl-3 outline-1 outline-gray-300 focus:outline-indigo-600">
+              <span class="text-base text-gray-500 select-none">workcation.com/</span>
+              <input id="nickname" formControlName="nickname" pInputText placeholder="janesmith" class="w-full" />
+            </div>
+          </div>
+        </div>
+
+        <!--Photo -->
+         <div class="col-span-full">
+          <label for="photo" class="block text-sm font-medium text-gray-900">Photo</label>
+          <div class="mt-2 flex items-center gap-x-3">
+            <button (click)="photoinput.click()">Choisissez votre photo</button>
+            <input type="file" hidden name="photo" chooseLabel="Change" class="w-full" #photoinput (change)="onPhoto(photoinput.files)"/>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="border-b border-gray-900/10 pb-12">
+      <!-- Email -->
+      <div class="sm:col-span-4">
+        <label for="email" class="block text-sm font-medium text-gray-900">Email</label>
+        <div class="mt-2">
+          <input id="email" formControlName="email" pInputText type="email" placeholder="example@mail.com" class="w-full" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Password -->
+    <div class="mb-6">
+      <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+        Password
+      </label>
+      <p-password formControlName="password" id="password" placeholder="******************" class="w-full"></p-password>
+      <p class="text-red-500 text-xs italic">Please choose a password.</p>
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="mt-6 flex items-center justify-end gap-x-6">
+    <button type="button" pButton label="Cancel" class="text-sm font-semibold text-gray-900 p-button-text" (click)="onCancel()"></button>
+    <button type="submit" pButton label="Save" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" (click)="onSubmit()"></button>
+  </div>
+</form>
