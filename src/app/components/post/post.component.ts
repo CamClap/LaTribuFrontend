@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AuthenticationService, ConnectedPerson } from '../../services/authentication.service';
+import { AuthenticationService, ConnectedUser } from '../../services/authentication.service';
 import { GroupService } from '../../services/group.service';
 import { PostService } from '../../services/post.service';
 import { UserService } from '../../services/user.service';
@@ -27,7 +27,7 @@ export class PostComponent {
 
 
   selectedFile: File | null = null;
-  currentUser: ConnectedPerson | null | undefined = undefined;
+  currentUser: ConnectedUser | null | undefined = undefined;
   selectedGroup: Group | null = null;
 
   constructor(
@@ -64,8 +64,9 @@ export class PostComponent {
       picture: '',
       birthdate: new Date(0),
       email: '',
-      password: '',
-      role: Role.USER
+      roles: ['ROLE_USER'],     // au minimum un tableau vide ou les rôles de l’utilisateur
+      family: [],               // tableau vide si tu n’as pas les données à ce moment-là
+      password: undefined
     };
 
     const newPost: Post = {

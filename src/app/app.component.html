@@ -12,7 +12,7 @@
 
       <!-- Right: Authenticated or Not -->
       <div class="flex items-center space-x-4">
-        @if (authenticationService.connectedPerson | async ; as person) {
+        @if (authenticationService.connectedUser| async ; as user) {
         <img [src]="userPicture" (error)="onPhotoError($event)" alt="Photo de profil"
           class="w-9 h-9 rounded-full object-cover border border-gray-300" />
 
