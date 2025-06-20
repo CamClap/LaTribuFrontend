@@ -10,7 +10,6 @@ interface User {
   roles: string[]; // Symfony retourne un tableau de rôles (ex : ["ROLE_USER", "ROLE_ADMIN"])
   password?: string; // En lecture, le backend ne renverra pas le mot de passe
   family: Group[];
-
 }
 
 @Injectable({
@@ -54,6 +53,13 @@ export class UserService {
       : this.getDefaultPhotoForUser(user.id);
   }
 
+  save(user: Partial<User>): Observable<User> {
+    return this.httpClient.post<User>(`${this.url}`, user, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
+/**
   save(user: Partial<User>, photo?: File): Observable<User> {
     const data = new FormData();
     data.append("user", new Blob([JSON.stringify(user)], { type: "application/json" }));
@@ -61,7 +67,7 @@ export class UserService {
       data.append("photo", photo, photo.name);
     }
     return this.httpClient.post<User>(this.url, data);
-  }
+  }*/
 
 
   update(user: Partial<User>, photo?: File): Observable<User> {

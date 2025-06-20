@@ -24,7 +24,7 @@ export class SignupComponent {
     private userService: UserService,
     private router: Router
   ) { }
-
+/**
   onSubmit() {
     console.log("userFormGroup", this.userFormGroup.getRawValue());
     if (this.userFormGroup.valid)
@@ -35,7 +35,26 @@ export class SignupComponent {
       console.log("form invalid"),
         this.userFormGroup.markAllAsTouched();
   }
+*/
 
+onSubmit(): void {
+  if (this.userFormGroup.valid) {
+    const user = this.userFormGroup.value;
+
+    // Appel de la méthode sans FormData
+    this.userService.save(user).subscribe({
+      next: (res) => {
+        console.log('Utilisateur créé avec succès', res);
+        // Redirection ou message de succès ici
+      },
+      error: (err) => {
+        console.error('Erreur lors de la création', err);
+      }
+    });
+  } else {
+    console.warn('Formulaire invalide');
+  }
+}
   onCancel() {
     this.router.navigateByUrl("/");
   }
