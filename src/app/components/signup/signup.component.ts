@@ -26,7 +26,7 @@ export class SignupComponent {
   ) { }
 
   onSubmit() {
-    console.log(this.userFormGroup.getRawValue());
+    console.log("userFormGroup", this.userFormGroup.getRawValue());
     if (this.userFormGroup.valid)
       this.userService.save(this.userFormGroup.value, this.photo!).subscribe({
         next: () => this.router.navigateByUrl("/login")

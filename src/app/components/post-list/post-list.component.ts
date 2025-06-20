@@ -25,15 +25,16 @@ export class PostListComponent implements OnInit {
   posts: Post[] = [];
   currentGroupName: string = '';
   isLoading = true;
-  connectedUser: User | any = null;
+  connectedUser: User | null = null;
 
   ngOnInit() {
-    this.authenticationService.connectedPerson.subscribe(person => {
-      if (person) {
-        this.userService.findById(person.id).subscribe(user => {
-          this.connectedUser = user;
-          this.person = person;
-          this.userService.getGroupsByUserId(person.id).subscribe(groups => {
+    this.authenticationService.connectedUser.subscribe(user => {
+      console.log('user from connectedUser:', user);
+      if (user) {
+        this.userService.findById(user.id).subscribe(fullUser => {
+          this.connectedUser = fullUser;
+          console.log('connectedUser:', this.connectedUser);
+          this.userService.getGroupsByUserId(fullUser.id).subscribe(groups => {
             this.groups = groups;
             if (groups.length > 0) {
               this.groupService.setCurrentGroup(groups[0]);
@@ -48,6 +49,7 @@ export class PostListComponent implements OnInit {
       }
     });
   }
+
   loadPosts(groupId: number) {
     this.postService.getPostsOfUserGroup().subscribe({
       next: posts => this.posts = posts,

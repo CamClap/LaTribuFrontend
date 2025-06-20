@@ -6,12 +6,11 @@ import { Group } from '../models/group.model';
 interface User {
   id: number;
   email: string;
-  password: string;
-  role: Enumerator;
   name: string;
-  nickname: string;
-  picture: string;
-  birthdate: Date;
+  roles: string[]; // Symfony retourne un tableau de rôles (ex : ["ROLE_USER", "ROLE_ADMIN"])
+  password?: string; // En lecture, le backend ne renverra pas le mot de passe
+  family: Group[];
+
 }
 
 @Injectable({
@@ -19,7 +18,7 @@ interface User {
 })
 export class UserService {
 
-  private url: string = 'http://localhost:8080/persons';
+  private url: string = 'http://localhost:8080/api/users';
 
   constructor(private httpClient: HttpClient) { }
 
@@ -27,7 +26,7 @@ export class UserService {
   findAll(): Observable<User[]> {
     return this.httpClient.get<User[]>(this.url);
   }
-  
+
   findById(id: number): Observable<User> {
     return this.httpClient.get<User>(`${this.url}/${id}`);
   }
@@ -50,11 +49,11 @@ export class UserService {
 
   getPhotoUrl(user: { id: number, picture?: string }): string {
     console.log(user.picture);
-    return user?.picture 
-      ? `http://localhost:8080/files/${user.picture}` 
+    return user?.picture
+      ? `http://localhost:8080/files/${user.picture}`
       : this.getDefaultPhotoForUser(user.id);
   }
-  
+
   save(user: Partial<User>, photo?: File): Observable<User> {
     const data = new FormData();
     data.append("user", new Blob([JSON.stringify(user)], { type: "application/json" }));
@@ -63,7 +62,7 @@ export class UserService {
     }
     return this.httpClient.post<User>(this.url, data);
   }
-  
+
 
   update(user: Partial<User>, photo?: File): Observable<User> {
   const data = new FormData();

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import {Component, inject} from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 import { AuthenticationService } from './services/authentication.service';
@@ -30,13 +30,13 @@ export class AppComponent {
 
   constructor() {
     // On écoute la personne connectée
-    this.authenticationService.connectedPerson.subscribe(person => {
-      if (person) {
+    this.authenticationService.connectedUser.subscribe(user => {
+      if (user) {
         // On récupère ses infos (dont la photo)
-        this.userService.findById(person.id).subscribe(user => {
+        this.userService.findById(user.id).subscribe(user => {
           this.userPicture = this.userService.getPhotoUrl(user);;
           // this.connectedUser = user;
-          this.userService.getGroupsByUserId(person.id).subscribe(groups => {
+          this.userService.getGroupsByUserId(user.id).subscribe(groups => {
             this.groups = groups;
 
             if (groups.length > 0) {

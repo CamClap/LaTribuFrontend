@@ -1,12 +1,14 @@
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { Person } from "./person.model";
+import {Group} from './group.model';
 
-export interface User extends Person {
+export interface User {
   id: number;
+  email: string;
   name: string;
-  nickname: string;
-  picture: string;
-  birthdate: Date;
+  nickname?: string;
+  roles: string[];
+  password?: string;
+  family: Group[];
 }
 
 export namespace User {
@@ -14,7 +16,6 @@ export namespace User {
     return new FormGroup({
       name: new FormControl(user?.name ?? '', { nonNullable: true, validators: [Validators.required, Validators.minLength(3)] }),
       nickname: new FormControl(user?.nickname ?? '', { nonNullable: true, validators: [Validators.minLength(3)] }),
-      // picture: new FormControl(user?.picture ?? '', { nonNullable: true, validators: [Validators.minLength(3)] }),
       email: new FormControl(user?.email ?? '', { nonNullable: true, validators: [Validators.required, Validators.email] }),
       password: new FormControl(user?.password ?? '', { nonNullable: true, validators: [Validators.required] }),
     })

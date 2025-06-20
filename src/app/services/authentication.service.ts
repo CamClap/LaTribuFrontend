@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 import { JwtPayload, jwtDecode } from 'jwt-decode';
 
 
-export interface ConnectedPerson {
+export interface ConnectedUser {
   accessToken: string;
   refreshToken: string;
   id: number;
@@ -18,7 +18,8 @@ interface JwtResponse {
 }
 
 interface JwtCustomPayload extends JwtPayload {
-  email: string
+  email?: string;
+  username?: string;
 }
 
 @Injectable({
@@ -26,70 +27,56 @@ interface JwtCustomPayload extends JwtPayload {
 })
 export class AuthenticationService {
 
-  connectedPerson = new BehaviorSubject<ConnectedPerson | undefined>(undefined);
-  private url = environment.backendUrl + "/authenticate";
+  connectedUser = new BehaviorSubject<ConnectedUser | undefined>(undefined);
+  private url = environment.backendUrl + "/auth";
 
   constructor(private httpClient: HttpClient) { }
- 
+
   init() {
-    const json = localStorage.getItem('person');
+    const json = localStorage.getItem('user');
     if (json)
-      this.connectedPerson.next(JSON.parse(json));
+      this.connectedUser.next(JSON.parse(json));
   }
 
-  getCurrentPersonSync(): ConnectedPerson | undefined {
-    return this.connectedPerson.value;
+  getCurrentPersonSync(): ConnectedUser | undefined {
+    return this.connectedUser.value;
   }
-  
+
   getCurrentPersonId(): number | undefined {
-    return this.connectedPerson.value?.id;
+    return this.connectedUser.value?.id;
   }
-  
+
   getAccessToken(): string | undefined {
-    return this.connectedPerson.value?.accessToken;
+    return this.connectedUser.value?.accessToken;
   }
-  
+
   login(email: string, password: string): Observable<void> {
-    return this.httpClient.post<JwtResponse>(this.url, {
-      mail: email,
-      password: password,
+    return this.httpClient.post<{ token: string }>(this.url, {
+      email,           // aussi corriger le champ, tu envoyais mail avant, alors que le backend attend email ?
+      password,
       grantType: 'password'
     }).pipe(
       tap(res => {
-        const decodedAccessToken = jwtDecode<JwtCustomPayload>(res.accessToken);
-        const person = {
-          accessToken: res.accessToken,
-          refreshToken: res.refreshToken,
-          id: Number(decodedAccessToken.sub),
-          name: decodedAccessToken.email
+        const decodedAccessToken = jwtDecode<JwtCustomPayload>(res.token);
+        const user: ConnectedUser = {
+          accessToken: res.token,
+          refreshToken: '',   // Pas reçu ici, gérer selon ton backend
+          id: 2,
+          name: decodedAccessToken.username ?? 'utilisateur'
         };
-        this.connectedPerson.next(person);
-        localStorage.setItem('person', JSON.stringify(person));
+        this.connectedUser.next(user);
+        localStorage.setItem('user', JSON.stringify(user));
       }),
-      map(res => void 0));
+      map(() => void 0)
+    );
   }
+
 
   logout() {
-    localStorage.removeItem('person');
-    this.connectedPerson.next(undefined);
+    localStorage.removeItem('user');
+    this.connectedUser.next(undefined);
   }
 
-  refresh() {
-    return this.httpClient.post<JwtResponse>(this.url, {
-      refreshToken: this.connectedPerson.value?.refreshToken,
-      grantType: 'refreshToken'
-    }).pipe(
-      tap(res => {
-        const decodedAccessToken = jwtDecode<JwtCustomPayload>(res.accessToken);
-        const person = {
-          accessToken: res.accessToken,
-          refreshToken: res.refreshToken,
-          id: Number(decodedAccessToken.sub),
-          name: decodedAccessToken.email
-        };
-        this.connectedPerson.next(person);
-        localStorage.setItem('person', JSON.stringify(person));
-      }));
-  }
+
 
 }

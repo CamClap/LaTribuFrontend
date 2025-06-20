@@ -1,9 +1,9 @@
-import { Person } from "./person.model";
+import { User } from "./user.model";
 import { Post } from "./post.model";
 
 export interface Group{
     id: number;
     name: string;
-    users: Person[];
+    users: User[];
     posts: Post[];
 }
