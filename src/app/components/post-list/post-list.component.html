@@ -1,6 +1,7 @@
 <div class="p-6 max-w-4xl mx-auto">
     @if (authenticationService.connectedUser | async ; as user) {
-    <div class="mb-6">
+
+      <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-800 mb-2">Bonjour {{ user?.name||'utilisateur'}} 👋</h1>
 
         @if (groups.length > 0) {
@@ -34,12 +35,31 @@
         </ul>
         }
         @else {
-        <p class="text-red-600 mt-4">
-            Vous n'avez pas encore de groupe.
-            <a routerLink="/groups/create" class="text-blue-500 underline">Créez-en un</a>
-            ou
-            <a routerLink="/groups/join" class="text-blue-500 underline">rejoignez-en un</a>.
-        </p>
+          <div class="mt-4">
+            <p class="text-red-600 mb-4">
+              Vous n'avez pas encore de groupe.
+            </p>
+
+            <form [formGroup]="groupFormGroup" (ngSubmit)="createGroup()" class="flex items-center gap-4">
+              <input
+                type="text"
+                formControlName="name"
+                required
+                placeholder="Nom du groupe"
+                class="border border-gray-300 px-3 py-2 rounded-md w-full max-w-xs"
+              />
+              <button
+                type="submit"
+                [disabled]="groupFormGroup.invalid"
+                class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
+                Créer
+              </button>
+            </form>
+            <p class="mt-2 text-sm text-gray-600">
+              ou
+              <a routerLink="/groups/join" class="text-blue-500 underline">rejoignez-en un</a>.
+            </p>
+          </div>
         }
     </div>
     }
