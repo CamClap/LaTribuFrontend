@@ -8,7 +8,7 @@ import { Post } from '../models/post.model';
   providedIn: 'root'
 })
 export class PostService {
-  private url = environment.backendUrl + '/posts';
+  private url = environment.backendUrl + '/api/posts';
 
   constructor(private httpClient: HttpClient) { }
 
@@ -20,8 +20,8 @@ export class PostService {
   //   return this.httpClient.get<Post[]>(this.url, { params: { groupId: groupId.toString() } });
   // }
 
-  getPostsOfUserGroup(): Observable<Post[]> {
-  return this.httpClient.get<Post[]>(`${environment.backendUrl}/posts/group`);
+  getPostsOfUserGroup(id: number): Observable<Post[]> {
+    return this.httpClient.get<Post[]>(`${this.url}?groupOfPost=/api/groups/${id}`)
 }
 
 

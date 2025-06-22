@@ -63,6 +63,7 @@ export class AuthenticationService {
         const userId = decodedAccessToken.sub ?? decodedAccessToken.id ?? 0;
         const idNumber = typeof userId === 'string' ? parseInt(userId, 10) : userId;
 
+
         const user: ConnectedUser = {
           accessToken: res.token,
           refreshToken: '',   // À gérer si le backend le fournit

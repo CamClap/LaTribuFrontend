@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../models/user.model';
 import { Post } from '../models/post.model';
+import {environment} from '../../environments/environment';
 
 interface Group {
   id: number;
@@ -16,7 +17,7 @@ interface Group {
 })
 export class GroupService {
 
-  private url: string = 'http://localhost:8080/api/groups';
+  private url: string = environment.backendUrl + '/api/groups';
 
   private currentGroupSubject = new BehaviorSubject<Group | null>(null);
   currentGroup$ = this.currentGroupSubject.asObservable();
@@ -25,6 +26,9 @@ export class GroupService {
 
   getCurrentGroupSync(): Group | null {
     return this.currentGroupSubject.value;
+  }
+  getGroupsByUser(userId: number): Observable<Group[]> {
+    return this.httpClient.get<Group[]>(`http://localhost:8080/api/users/${userId}/groups`);
   }
 
   setCurrentGroup(group: Group) {

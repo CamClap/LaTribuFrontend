@@ -7,8 +7,8 @@ interface User {
   id: number;
   email: string;
   name: string;
-  roles: string[]; // Symfony retourne un tableau de rôles (ex : ["ROLE_USER", "ROLE_ADMIN"])
-  password?: string; // En lecture, le backend ne renverra pas le mot de passe
+  roles: string[];
+  password?: string;
   family: Group[];
 }
 
