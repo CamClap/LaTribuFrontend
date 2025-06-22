@@ -42,7 +42,6 @@ export class PostListComponent implements OnInit {
 
   ngOnInit() {
     this.authenticationService.connectedUser.subscribe(user => {
-      console.log('Utilisateur connecté reçu:', user);
       if (user) {
         this.userService.findById(user.id).subscribe(fullUser => {
           this.connectedUser = fullUser;
@@ -53,7 +52,7 @@ export class PostListComponent implements OnInit {
             if (groups.length > 0) {
               this.groupService.setCurrentGroup(groups[0]);
               this.currentGroupName = groups[0].name;
-              this.loadPosts(groups[0].id);
+              this.loadPosts(groups[0].id);  // <- ici tu passes bien l'id
             }
             this.isLoading = false;
           });
@@ -65,20 +64,28 @@ export class PostListComponent implements OnInit {
   }
 
   loadPosts(groupId: number) {
-    this.postService.getPostsOfUserGroup().subscribe({
-      next: posts => this.posts = posts,
+    if (!groupId) {
+      console.warn("Aucun groupe sélectionné");
+      this.posts = [];
+      return;
+    }
+
+    this.postService.getPostsOfUserGroup(groupId).subscribe({
+      next: (response: any) => {
+        this.posts = response.member;  // <- ici on prend la propriété member
+      },
       error: err => {
         console.error("Erreur lors du chargement des posts", err);
-        this.posts = [];
       }
     });
   }
+
+
 
   createGroup() {
     if (this.groupFormGroup.invalid) return;
 
     const userId = this.authenticationService.getCurrentPersonId();
-
     const newGroup = {
       name: this.groupFormGroup.value.name,
       ownerId: userId,  // ou ce que ton backend attend comme champ

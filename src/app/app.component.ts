@@ -23,47 +23,16 @@ export class AppComponent {
 
   groups: any[] = [];
   userId: number | null = null;
-  posts: Post[] = [];
 
   userPicture: string | null = null;
   // connectedUser: any = null;
 
   constructor() {
-    // On écoute la personne connectée
-    this.authenticationService.connectedUser.subscribe(user => {
-      if (user) {
-        // On récupère ses infos (dont la photo)
-        this.userService.findById(user.id).subscribe(user => {
-          this.userPicture = this.userService.getPhotoUrl(user);;
-          // this.connectedUser = user;
-          this.userService.getGroupsByUserId(user.id).subscribe(groups => {
-            this.groups = groups;
 
-            if (groups.length > 0) {
-              // Charger les posts du premier groupe
-              console.log("il y a bien un groupe")
-              this.groupService.setCurrentGroup(groups[0]);
-              const groupId = groups[0].id;
-              this.loadPosts(groupId);
-            }
-          });
-        });
-      }
-    });
 
   }
 
-  loadPosts(groupId: number) {
-    this.postService.getPostsOfUserGroup().subscribe({
-      next: posts => {
-        this.posts = posts;
-      },
-      error: err => {
-        console.error("Erreur récupération posts du groupe", err);
-        this.posts = [];
-      }
-    });
-  }
+
 
   onPhotoError(event: Event) {
     (event.target as HTMLImageElement).src = '/users-picture/chicken.png';

@@ -6,6 +6,7 @@ export interface Post {
    title: string;
    format: string;
    content: string;
-   creator: User;
-   group?: Group;
+   creator: string;
+   groupOfPost?: string;
+   date: Date;
 }
