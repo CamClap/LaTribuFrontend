@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { PostService } from '../../services/post.service';
 import { GroupService } from '../../services/group.service';
 import { Post } from '../../models/post.model';
-import { AsyncPipe } from '@angular/common';
+import {AsyncPipe, DatePipe, JsonPipe} from '@angular/common';
 import { AuthenticationService } from '../../services/authentication.service';
 import { UserService } from '../../services/user.service';
 import { RouterLink, RouterOutlet } from '@angular/router';
@@ -13,7 +13,7 @@ import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-post-list',
-  imports: [AsyncPipe, RouterLink, ReactiveFormsModule],
+  imports: [AsyncPipe, RouterLink, ReactiveFormsModule, JsonPipe, DatePipe],
   templateUrl: './post-list.component.html',
   styleUrl: './post-list.component.css'
 })
@@ -31,6 +31,9 @@ export class PostListComponent implements OnInit {
   isLoading = true;
   connectedUser: User | null = null;
   groupFormGroup: FormGroup;
+  inviteForm!: FormGroup;
+  groupCreator: User | null = null;
+  isConnectedUserGroupCreator: boolean = false;
 
 
   constructor() {
@@ -41,6 +44,7 @@ export class PostListComponent implements OnInit {
 
 
   ngOnInit() {
+    console.log('PostListComponent initialized')
     this.authenticationService.connectedUser.subscribe(user => {
       if (user) {
         this.userService.findById(user.id).subscribe(fullUser => {
@@ -48,17 +52,99 @@ export class PostListComponent implements OnInit {
           console.log('connectedUser:', this.connectedUser);
           this.userService.getGroupsByUserId(fullUser.id).subscribe(groups => {
             this.groups = groups;
-            console.log('Groups:', this.groups);
+
+            // Pour chaque groupe, on remplace creator string par User complet
+            this.groups.forEach(group => {
+              if (typeof group.creator === 'string') {
+                const creatorId = this.extractUserIdFromUrl(group.creator);
+                if (creatorId) {
+                  this.userService.findById(+creatorId).subscribe(user => {
+                    group.creator = user; // maintenant creator est un User complet
+                  });
+                }
+              }
+            });
+
             if (groups.length > 0) {
               this.groupService.setCurrentGroup(groups[0]);
               this.currentGroupName = groups[0].name;
-              this.loadPosts(groups[0].id);  // <- ici tu passes bien l'id
+              this.loadPosts(groups[0].id);
             }
             this.isLoading = false;
+            this.inviteForm = new FormGroup({
+              email: new FormControl('', [Validators.required, Validators.email])
+            });
           });
+
         });
       } else {
         this.isLoading = false;
+      }
+    });
+  }
+  loadGroupsAndCreator(userId: number) {
+    this.userService.getGroupsByUserId(userId).subscribe(groups => {
+      this.groups = groups;
+      if (groups.length > 0) {
+        this.groupService.setCurrentGroup(groups[0]);
+        this.currentGroupName = groups[0].name;
+        this.loadPosts(groups[0].id);
+
+        const creatorData = groups[0].creator;
+        if (typeof creatorData === 'string') {
+          // Si creator est une URL, récupère l'user complet
+          const creatorId = this.extractCreatorIdFromUrl(creatorData);
+          if (creatorId) {
+            this.userService.findById(+creatorId).subscribe(user => {
+              this.groupCreator = user ?? null; // si user undefined => null
+              this.checkIfUserIsGroupCreator();
+            });
+          }
+        } else {
+          // Sinon creator est un objet User (normalement)
+          // @ts-ignore
+          this.groupCreator = creatorData;
+          this.checkIfUserIsGroupCreator();
+        }
+      }
+      this.isLoading = false;
+      this.inviteForm = new FormGroup({
+        email: new FormControl('', [Validators.required, Validators.email])
+      });
+    });
+  }
+
+  checkIfUserIsGroupCreator() {
+    if (this.connectedUser && this.groupCreator) {
+      this.isConnectedUserGroupCreator = this.connectedUser.id === this.groupCreator.id;
+    } else {
+      this.isConnectedUserGroupCreator = false;
+    }
+  }
+
+
+  private extractUserIdFromUrl(url: string): string | null {
+    const match = url.match(/\/api\/users\/(\d+)/);
+    return match ? match[1] : null;
+  }
+  private extractCreatorIdFromUrl(url: string): string | null {
+    const match = url.match(/\/api\/users\/(\d+)/);
+    return match ? match[1] : null;
+  }
+
+  sendInvite() {
+    if (this.inviteForm.invalid || this.groups.length === 0) return;
+
+    const email = this.inviteForm.value.email;
+    const groupId = this.groups[0].id;
+
+    this.httpClient.post(`/api/groups/${groupId}/invite`, { email }).subscribe({
+      next: () => {
+        alert(`Invitation envoyée à ${email}`);
+        this.inviteForm.reset();
+      },
+      error: () => {
+        alert("Erreur lors de l'envoi de l'invitation");
       }
     });
   }
@@ -72,7 +158,19 @@ export class PostListComponent implements OnInit {
 
     this.postService.getPostsOfUserGroup(groupId).subscribe({
       next: (response: any) => {
-        this.posts = response.member;  // <- ici on prend la propriété member
+        console.log('API response groups:', response);
+        this.posts = response.member;
+
+        for (const post of this.posts) {
+          if (typeof post.creator === 'string') {
+            const userId = this.extractUserIdFromUrl(post.creator);
+            if (userId) {
+              this.userService.findById(+userId).subscribe(user => {
+                post.creator = user.name;
+              });
+            }
+          }
+        }
       },
       error: err => {
         console.error("Erreur lors du chargement des posts", err);

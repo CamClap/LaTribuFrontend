@@ -1,63 +1,91 @@
-<form [formGroup]="userFormGroup" >
-  <div class="space-y-12">
-    <div class="border-b border-gray-900/10 pb-12">
-      <h2 class="text-base font-semibold text-gray-900">Inscription</h2>
-
-      <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-        <div class="sm:col-span-4">
-          <!-- Nom -->
-          <label for="name" class="block text-sm font-medium text-gray-900">Nom</label>
-          <div class="mt-2">
-            <div class="flex items-center rounded-md bg-white pl-3 outline-1 outline-gray-300 focus:outline-indigo-600">
-              <span class="text-base text-gray-500 select-none">workcation.com/</span>
-              <input id="name" formControlName="name" pInputText placeholder="janesmith" class="w-full" />
-            </div>
-          </div>
-
-          <!-- Surnom -->
-          <label for="nickname" class="block text-sm font-medium text-gray-900">Surnom</label>
-          <div class="mt-2">
-            <div class="flex items-center rounded-md bg-white pl-3 outline-1 outline-gray-300 focus:outline-indigo-600">
-              <span class="text-base text-gray-500 select-none">workcation.com/</span>
-              <input id="nickname" formControlName="nickname" pInputText placeholder="janesmith" class="w-full" />
-            </div>
-          </div>
-        </div>
-
-        <!--Photo -->
-         <div class="col-span-full">
-          <label for="photo" class="block text-sm font-medium text-gray-900">Photo</label>
-          <div class="mt-2 flex items-center gap-x-3">
-            <button (click)="photoinput.click()">Choisissez votre photo</button>
-            <input type="file" hidden name="photo" chooseLabel="Change" class="w-full" #photoinput (change)="onPhoto(photoinput.files)"/>
-          </div>
-        </div>
-      </div>
+<form [formGroup]="userFormGroup" class="max-w-2xl mx-auto p-6 bg-white rounded-2xl shadow-md mt-10" >
+  <h2 class="text-2xl font-bold text-gray-900 mb-8">Créer un compte</h2>
+  <div class="mb-5">
+    <label for="name" class="block text-sm font-medium text-gray-700">Nom</label>
+    <div class="mt-1 flex rounded-md shadow-sm">
+      <input
+        id="name"
+        formControlName="name"
+        type="text"
+        placeholder="janesmith"
+        class="flex-1 block w-full rounded-r-md border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+      />
     </div>
-
-    <div class="border-b border-gray-900/10 pb-12">
-      <!-- Email -->
-      <div class="sm:col-span-4">
-        <label for="email" class="block text-sm font-medium text-gray-900">Email</label>
-        <div class="mt-2">
-          <input id="email" formControlName="email" pInputText type="email" placeholder="example@mail.com" class="w-full" />
-        </div>
-      </div>
-    </div>
-
-    <!-- Password -->
-    <div class="mb-6">
-      <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
-        Password
-      </label>
-      <p-password formControlName="password" id="password" placeholder="******************" class="w-full"></p-password>
-      <p class="text-red-500 text-xs italic">Please choose a password.</p>
+    <div *ngIf="userFormGroup.get('name')?.invalid && (userFormGroup.get('name')?.touched || userFormGroup.get('name')?.dirty)" class="text-red-600 text-sm mt-1">
+      <div *ngIf="userFormGroup.get('name')?.errors?.['required']">Le nom est obligatoire.</div>
+      <div *ngIf="userFormGroup.get('name')?.errors?.['minlength']">Le nom doit contenir au moins 3 caractères.</div>
     </div>
   </div>
-
-  <!-- Buttons -->
-  <div class="mt-6 flex items-center justify-end gap-x-6">
-    <button type="button" pButton label="Cancel" class="text-sm font-semibold text-gray-900 p-button-text" (click)="onCancel()"></button>
-    <button type="submit" pButton label="Save" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" (click)="onSubmit()"></button>
+  <div class="mb-5">
+    <label for="nickname" class="block text-sm font-medium text-gray-700">Surnom</label>
+    <div class="mt-1 flex rounded-md shadow-sm">
+      <input
+        id="nickname"
+        formControlName="nickname"
+        type="text"
+        placeholder="nickname"
+        class="flex-1 block w-full rounded-r-md border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+      />
+    </div>
+    <div *ngIf="userFormGroup.get('nickname')?.invalid && (userFormGroup.get('nickname')?.touched || userFormGroup.get('nickname')?.dirty)" class="text-red-600 text-sm mt-1">
+      <div *ngIf="userFormGroup.get('nickname')?.errors?.['minlength']">Le surnom doit contenir au moins 3 caractères.</div>
+    </div>
+  </div>
+  <div class="mb-5">
+    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+    <input
+      type="email"
+      id="email"
+      formControlName="email"
+      placeholder="example@mail.com"
+      class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+    />
+    <div *ngIf="userFormGroup.get('email')?.invalid && (userFormGroup.get('email')?.touched || userFormGroup.get('email')?.dirty)" class="text-red-600 text-sm mt-1">
+      <div *ngIf="userFormGroup.get('email')?.errors?.['required']">L'email est obligatoire.</div>
+      <div *ngIf="userFormGroup.get('email')?.errors?.['email']">L'email n'est pas valide.</div>
+    </div>
+  </div>
+  <div class="mb-5">
+    <label for="password" class="block text-sm font-medium text-gray-700">Mot de passe</label>
+    <input
+      id="password"
+      formControlName="password"
+      type="password"
+      placeholder=""
+      class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+    />
+    <div *ngIf="userFormGroup.get('password')?.invalid && (userFormGroup.get('password')?.touched || userFormGroup.get('password')?.dirty)" class="text-red-600 text-sm mt-1">
+      <div *ngIf="userFormGroup.get('password')?.errors?.['required']">Le mot de passe est obligatoire.</div>
+      <div *ngIf="userFormGroup.get('password')?.errors?.['passwordInvalid']">Le mot de passe doit contenir au moins 6 caractères, des lettres et des chiffres.</div>
+    </div>
+  </div>
+  <div class="mb-6">
+    <label for="photo" class="block text-sm font-medium text-gray-700">Photo de profil</label>
+    <div class="mt-2 flex items-center gap-4">
+      <button
+        type="button"
+        class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm rounded-md shadow-sm"
+        (click)="photoinput.click()"
+      >
+        Choisir un fichier
+      </button>
+      <input type="file" hidden #photoinput (change)="onPhoto(photoinput.files)" />
+    </div>
+  </div>
+  <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 mt-6">
+    <button
+      type="button"
+      class="text-gray-600 hover:text-gray-800 text-sm font-medium"
+      (click)="onCancel()"
+    >
+      Annuler
+    </button>
+    <button
+      type="submit"
+      class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-4 py-2 rounded-md shadow-sm text-sm"
+      (click)="onSubmit()"
+    >
+      Valider
+    </button>
   </div>
 </form>

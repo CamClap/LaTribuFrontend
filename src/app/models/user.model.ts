@@ -1,5 +1,6 @@
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import {Group} from './group.model';
+import { passwordValidator } from '../shared/validators/password.validator';
 
 export interface User {
   id: number;
@@ -17,7 +18,7 @@ export namespace User {
       name: new FormControl(user?.name ?? '', { nonNullable: true, validators: [Validators.required, Validators.minLength(3)] }),
       nickname: new FormControl(user?.nickname ?? '', { nonNullable: true, validators: [Validators.minLength(3)] }),
       email: new FormControl(user?.email ?? '', { nonNullable: true, validators: [Validators.required, Validators.email] }),
-      password: new FormControl(user?.password ?? '', { nonNullable: true, validators: [Validators.required] }),
+      password: new FormControl(user?.password ?? '', { nonNullable: true, validators: [Validators.required, passwordValidator] }),
     })
   }
 }
