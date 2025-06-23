@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable, delay } from 'rxjs';
 import { Post } from '../models/post.model';
+import {User} from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,10 +17,10 @@ export class PostService {
     return this.httpClient.get<Post[]>(this.url, q ? { params: { q: q } } : undefined).pipe(delay(1000));
   }
 
-  // getPostsByGroupId(groupId: number): Observable<Post[]> {
-  //   return this.httpClient.get<Post[]>(this.url, { params: { groupId: groupId.toString() } });
-  // }
-
+  private extractId(url: string): string {
+    const match = url.match(/\/users\/(\d+)/);
+    return match?.[1] ?? '';
+  }
   getPostsOfUserGroup(id: number): Observable<Post[]> {
     return this.httpClient.get<Post[]>(`${this.url}?groupOfPost=/api/groups/${id}`)
 }

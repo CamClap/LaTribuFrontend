@@ -6,4 +6,5 @@ export interface Group{
     name: string;
     users: User[];
     posts: Post[];
+    creator?: User | string;
 }
