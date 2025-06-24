@@ -58,15 +58,13 @@ export class AuthenticationService {
     }).pipe(
       tap(res => {
         const decodedAccessToken = jwtDecode<JwtCustomPayload>(res.token);
-
-        // Récupérer l'id depuis 'sub' ou 'id'
         const userId = decodedAccessToken.sub ?? decodedAccessToken.id ?? 0;
         const idNumber = typeof userId === 'string' ? parseInt(userId, 10) : userId;
 
 
         const user: ConnectedUser = {
           accessToken: res.token,
-          refreshToken: '',   // À gérer si le backend le fournit
+          refreshToken: '',
           id: idNumber,
           name: decodedAccessToken.username ?? 'utilisateur'
         };
