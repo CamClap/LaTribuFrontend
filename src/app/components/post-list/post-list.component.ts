@@ -13,7 +13,7 @@ import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-post-list',
-  imports: [AsyncPipe, RouterLink, ReactiveFormsModule, JsonPipe, DatePipe],
+  imports: [AsyncPipe, RouterLink, ReactiveFormsModule, DatePipe],
   templateUrl: './post-list.component.html',
   styleUrl: './post-list.component.css'
 })
@@ -65,7 +65,7 @@ export class PostListComponent implements OnInit {
               }
             });
 
-            if (groups.length > 0) {
+            if (this.groups.length > 0) {
               this.groupService.setCurrentGroup(groups[0]);
               this.currentGroupName = groups[0].name;
               this.loadPosts(groups[0].id);
@@ -82,46 +82,6 @@ export class PostListComponent implements OnInit {
       }
     });
   }
-  loadGroupsAndCreator(userId: number) {
-    this.userService.getGroupsByUserId(userId).subscribe(groups => {
-      this.groups = groups;
-      if (groups.length > 0) {
-        this.groupService.setCurrentGroup(groups[0]);
-        this.currentGroupName = groups[0].name;
-        this.loadPosts(groups[0].id);
-
-        const creatorData = groups[0].creator;
-        if (typeof creatorData === 'string') {
-          // Si creator est une URL, récupère l'user complet
-          const creatorId = this.extractCreatorIdFromUrl(creatorData);
-          if (creatorId) {
-            this.userService.findById(+creatorId).subscribe(user => {
-              this.groupCreator = user ?? null; // si user undefined => null
-              this.checkIfUserIsGroupCreator();
-            });
-          }
-        } else {
-          // Sinon creator est un objet User (normalement)
-          // @ts-ignore
-          this.groupCreator = creatorData;
-          this.checkIfUserIsGroupCreator();
-        }
-      }
-      this.isLoading = false;
-      this.inviteForm = new FormGroup({
-        email: new FormControl('', [Validators.required, Validators.email])
-      });
-    });
-  }
-
-  checkIfUserIsGroupCreator() {
-    if (this.connectedUser && this.groupCreator) {
-      this.isConnectedUserGroupCreator = this.connectedUser.id === this.groupCreator.id;
-    } else {
-      this.isConnectedUserGroupCreator = false;
-    }
-  }
-
 
   private extractUserIdFromUrl(url: string): string | null {
     const match = url.match(/\/api\/users\/(\d+)/);
@@ -186,7 +146,7 @@ export class PostListComponent implements OnInit {
     const userId = this.authenticationService.getCurrentPersonId();
     const newGroup = {
       name: this.groupFormGroup.value.name,
-      ownerId: userId,  // ou ce que ton backend attend comme champ
+      ownerId: userId,
     };
 
     this.groupService.save(newGroup).subscribe({

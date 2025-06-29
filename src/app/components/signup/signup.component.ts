@@ -41,8 +41,7 @@ export class SignupComponent {
         console.error('Erreur lors de la création', err);
       }
     });
-  }
-  onCancel() {
+  }  onCancel() {
     this.router.navigateByUrl("/");
   }
 
