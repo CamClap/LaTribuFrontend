@@ -12,7 +12,7 @@ import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-post-list',
-  imports: [AsyncPipe, RouterLink, ReactiveFormsModule, JsonPipe, DatePipe],
+  imports: [AsyncPipe, RouterLink, ReactiveFormsModule, DatePipe],
   templateUrl: './post-list.component.html',
   styleUrl: './post-list.component.css'
 })
@@ -63,7 +63,7 @@ export class PostListComponent implements OnInit {
               }
             });
 
-            if (groups.length > 0) {
+            if (this.groups.length > 0) {
               this.groupService.setCurrentGroup(groups[0]);
               this.currentGroupName = groups[0].name;
               this.loadPosts(groups[0].id);
@@ -80,9 +80,6 @@ export class PostListComponent implements OnInit {
       }
     });
   }
-
-
-
 
 
   private extractCreatorIdFromUrl(url: string): string | null {
@@ -143,7 +140,8 @@ export class PostListComponent implements OnInit {
 
     const userId = this.authenticationService.getCurrentPersonId();
     const newGroup = {
-      name: this.groupFormGroup.value.name
+
+      name: this.groupFormGroup.value.name,
     };
 
 

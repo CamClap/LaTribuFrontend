@@ -26,17 +26,6 @@ export class PostService {
 }
 
 
-  // save(post: Post, file?: File): Observable<Post> {
-  //   const formData = new FormData();
-  //   formData.append('post', new Blob([JSON.stringify(post)], { type: 'application/json' }));
-
-  //   if (file) {
-  //     formData.append('file', file);
-  //   }
-
-  //   return this.httpClient.post<Post>(this.url, formData);
-  // }
-
   save(post: Post): Observable<Post> {
     return this.httpClient.post<Post>(this.url, post, {
       headers: { 'Content-Type': 'application/json' }

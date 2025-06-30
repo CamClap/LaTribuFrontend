@@ -1,9 +1,32 @@
-<h2>Éditeur</h2>
-<input type="text" [(ngModel)]="postTitle" placeholder="Titre du post" />
-<ckeditor tagName="textarea" [editor]="Editor" (ready)="onReady($event)" [(ngModel)]="editorData" ></ckeditor>
+<div class="max-w-3xl mx-auto p-6 bg-white rounded-2xl shadow-lg space-y-6 mt-10">
+  <h2 class="text-2xl font-bold text-gray-800">Éditeur</h2>
 
+  <input
+    type="text"
+    [(ngModel)]="postTitle"
+    placeholder="Titre du post"
+    class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+  />
 
-<button (click)="createPost()">Valide</button>
-<hr />
-<h3>Prévisualisation</h3>
-<div [innerHTML]="editorData"></div>
+  <ckeditor
+    tagName="textarea"
+    [editor]="Editor"
+    (ready)="onReady($event)"
+    [(ngModel)]="editorData"
+  ></ckeditor>
+
+  <button
+    (click)="createPost()"
+    class="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition duration-200"
+  >
+    Valider
+  </button>
+
+  <hr class="border-gray-300" />
+
+  <h3 class="text-xl font-semibold text-gray-700">Prévisualisation</h3>
+  <div
+    class="p-4 border border-gray-200 rounded-xl bg-gray-50"
+    [innerHTML]="editorData"
+  ></div>
+</div>

@@ -9,6 +9,7 @@ export interface ConnectedUser {
   refreshToken: string;
   id: number;
   name: string;
+  roles: string[];
 }
 
 interface JwtResponse {
@@ -20,6 +21,7 @@ interface JwtCustomPayload extends JwtPayload {
   email?: string;
   username?: string;
   id?: number;
+  roles?: string[];
 }
 
 @Injectable({
@@ -61,12 +63,13 @@ export class AuthenticationService {
         const userId = decodedAccessToken.sub ?? decodedAccessToken.id ?? 0;
         const idNumber = typeof userId === 'string' ? parseInt(userId, 10) : userId;
 
-
+        const roles = decodedAccessToken.roles ?? [];
         const user: ConnectedUser = {
           accessToken: res.token,
           refreshToken: '',
           id: idNumber,
-          name: decodedAccessToken.username ?? 'utilisateur'
+          name: decodedAccessToken.username ?? 'utilisateur',
+          roles: roles
         };
         this.connectedUser.next(user);
         localStorage.setItem('user', JSON.stringify(user));
