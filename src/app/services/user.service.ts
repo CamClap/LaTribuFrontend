@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {map, Observable} from 'rxjs';
 import { Group } from '../models/group.model';
 
 interface User {
@@ -26,7 +26,9 @@ export class UserService {
   }
 
   getAll(): Observable<User[]> {
-    return this.httpClient.get<User[]>(this.url);
+    return this.httpClient.get<{ member: User[] }>(this.url).pipe(
+      map(response => response.member)
+    );
   }
 
   findById(id: number): Observable<User> {
