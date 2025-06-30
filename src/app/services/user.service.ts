@@ -21,6 +21,9 @@ export class UserService {
 
   constructor(private httpClient: HttpClient) { }
 
+  isAdmin(user: User): boolean {
+    return user.roles?.includes('ROLE_ADMIN') ?? false;
+  }
 
   getAll(): Observable<User[]> {
     return this.httpClient.get<User[]>(this.url);
@@ -44,6 +47,10 @@ export class UserService {
     ];
     const index = userId % defaultPhotos.length;
     return defaultPhotos[index];
+  }
+  extractUserIdFromUrl(url: string): string | null {
+    const match = url.match(/\/api\/users\/(\d+)/);
+    return match ? match[1] : null;
   }
 
   getPhotoUrl(user: { id: number, picture?: string }): string {

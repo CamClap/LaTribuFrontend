@@ -25,11 +25,12 @@ export class AppComponent {
   groups: any[] = [];
   userId: number | null = null;
 
+
+  connectedUser$ = this.authenticationService.connectedUser.asObservable();
   userPicture: string | null = null;
-  // connectedUser: any = null;
+
 
   constructor() {
-
 
   }
 

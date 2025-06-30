@@ -9,7 +9,6 @@ import { Group } from '../../models/group.model';
 
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
-import type { Editor } from '@ckeditor/ckeditor5-core';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 

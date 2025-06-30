@@ -7,7 +7,6 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { UserService } from '../../services/user.service';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { User } from '../../models/user.model';
-import { Group } from '../../models/group.model';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
 
@@ -32,8 +31,7 @@ export class PostListComponent implements OnInit {
   connectedUser: User | null = null;
   groupFormGroup: FormGroup;
   inviteForm!: FormGroup;
-  groupCreator: User | null = null;
-  isConnectedUserGroupCreator: boolean = false;
+
 
 
   constructor() {
@@ -56,7 +54,7 @@ export class PostListComponent implements OnInit {
             // Pour chaque groupe, on remplace creator string par User complet
             this.groups.forEach(group => {
               if (typeof group.creator === 'string') {
-                const creatorId = this.extractUserIdFromUrl(group.creator);
+                const creatorId = this.userService.extractUserIdFromUrl(group.creator);
                 if (creatorId) {
                   this.userService.findById(+creatorId).subscribe(user => {
                     group.creator = user; // maintenant creator est un User complet
@@ -83,10 +81,7 @@ export class PostListComponent implements OnInit {
     });
   }
 
-  private extractUserIdFromUrl(url: string): string | null {
-    const match = url.match(/\/api\/users\/(\d+)/);
-    return match ? match[1] : null;
-  }
+
   private extractCreatorIdFromUrl(url: string): string | null {
     const match = url.match(/\/api\/users\/(\d+)/);
     return match ? match[1] : null;
@@ -123,7 +118,7 @@ export class PostListComponent implements OnInit {
 
         for (const post of this.posts) {
           if (typeof post.creator === 'string') {
-            const userId = this.extractUserIdFromUrl(post.creator);
+            const userId = this.userService.extractUserIdFromUrl(post.creator);
             if (userId) {
               this.userService.findById(+userId).subscribe(user => {
                 post.creator = user.name;
@@ -145,10 +140,12 @@ export class PostListComponent implements OnInit {
 
     const userId = this.authenticationService.getCurrentPersonId();
     const newGroup = {
+
       name: this.groupFormGroup.value.name,
-      ownerId: userId,
     };
 
+
+    console.log('Nouveau groupe à créer:', newGroup);
     this.groupService.save(newGroup).subscribe({
       next: (savedGroup) => {
         this.groups.push(savedGroup);
