@@ -1,6 +1,6 @@
 import {Component, inject} from '@angular/core';
 import {Router, RouterLink, RouterOutlet} from '@angular/router';
-import { AsyncPipe } from '@angular/common';
+import {AsyncPipe} from '@angular/common';
 import { AuthenticationService } from './services/authentication.service';
 import { UserService } from './services/user.service';
 import { GroupService } from './services/group.service';
