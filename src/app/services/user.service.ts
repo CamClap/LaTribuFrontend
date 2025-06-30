@@ -22,7 +22,7 @@ export class UserService {
   constructor(private httpClient: HttpClient) { }
 
 
-  findAll(): Observable<User[]> {
+  getAll(): Observable<User[]> {
     return this.httpClient.get<User[]>(this.url);
   }
 
@@ -79,7 +79,7 @@ export class UserService {
   return this.httpClient.put<User>(`${this.url}/${user.id}`, data);
 }
 
-  deleteById(id: number): Observable<void> {
+  deleteUser(id: number): Observable<void> {
     return this.httpClient.delete<void>(`${this.url}/${id}`);
   }
 }

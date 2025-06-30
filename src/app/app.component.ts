@@ -1,5 +1,5 @@
 import {Component, inject} from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import {Router, RouterLink, RouterOutlet} from '@angular/router';
 import { AsyncPipe } from '@angular/common';
 import { AuthenticationService } from './services/authentication.service';
 import { UserService } from './services/user.service';
@@ -19,6 +19,7 @@ export class AppComponent {
   userService = inject(UserService);
   postService = inject(PostService);
   title = 'latribu_Frontend';
+  router = inject(Router);
 
 
   groups: any[] = [];
