@@ -50,13 +50,12 @@ export class PostListComponent implements OnInit {
           this.userService.getGroupsByUserId(fullUser.id).subscribe(groups => {
             this.groups = groups;
 
-            // Pour chaque groupe, on remplace creator string par User complet
             this.groups.forEach(group => {
               if (typeof group.creator === 'string') {
                 const creatorId = this.userService.extractUserIdFromUrl(group.creator);
                 if (creatorId) {
                   this.userService.findById(+creatorId).subscribe(user => {
-                    group.creator = user; // maintenant creator est un User complet
+                    group.creator = user;
                   });
                 }
               }

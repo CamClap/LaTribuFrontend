@@ -21,7 +21,6 @@ export const authenticationInterceptor: HttpInterceptorFn = (req, next) => {
         error.status === 401
       ) {
         authenticationService.logout();
-        // Ici tu peux éventuellement rediriger vers la page login si tu veux
         return throwError(() => error);
       } else {
         return throwError(() => error);
