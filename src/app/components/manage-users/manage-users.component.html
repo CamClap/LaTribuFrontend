@@ -1,26 +1,32 @@
-<div *ngIf="loading">Chargement...</div>
+@if (loading) {
+  <div>Chargement...</div>
+}
 
-<div *ngIf="!loading">
-  <h2 class="text-xl font-semibold mb-4">Liste des utilisateurs</h2>
-  <table class="min-w-full border text-sm">
-    <thead class="bg-gray-100">
-    <tr>
-      <th class="border px-2 py-1">ID</th>
-      <th class="border px-2 py-1">Email</th>
-      <th class="border px-2 py-1">Username</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let user of users">
-      <td class="border px-2 py-1">{{ user.id }}</td>
-      <td class="border px-2 py-1">{{ user.email }}</td>
-      <td class="border px-2 py-1">
-        <button (click)="deleteUser(user.id)"
+@if (!loading) {
+  <div>
+    <h2 class="text-xl font-semibold mb-4">Liste des utilisateurs</h2>
+    <table class="min-w-full border text-sm">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="border px-2 py-1">ID</th>
+          <th class="border px-2 py-1">Email</th>
+          <th class="border px-2 py-1">Username</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (user of users; track user) {
+          <tr>
+            <td class="border px-2 py-1">{{ user.id }}</td>
+            <td class="border px-2 py-1">{{ user.email }}</td>
+            <td class="border px-2 py-1">
+              <button (click)="deleteUser(user.id)"
                 class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition">
-          Supprimer
-        </button>
-      </td>
-    </tr>
-    </tbody>
-  </table>
-</div>
+                Supprimer
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

@@ -12,13 +12,6 @@
       <!-- Right: Authenticated or Not -->
       <div class="flex items-center space-x-4">
         @if (authenticationService.connectedUser| async ; as user) {
-          @if (user.roles.includes('ROLE_ADMIN')) {
-            <button
-              (click)="router.navigate(['/manage-users'])"
-              class="bg-green-600 text-white px-3 py-1.5 rounded-md text-sm hover:bg-green-700 transition">
-              Gérer user
-            </button>
-          }
         <img [src]="userPicture" (error)="onPhotoError($event)" alt="Photo de profil"
           class="w-9 h-9 rounded-full object-cover border border-gray-300" />
 

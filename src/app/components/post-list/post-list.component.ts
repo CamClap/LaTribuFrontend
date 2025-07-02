@@ -5,7 +5,7 @@ import { Post } from '../../models/post.model';
 import {AsyncPipe, DatePipe, JsonPipe} from '@angular/common';
 import { AuthenticationService } from '../../services/authentication.service';
 import { UserService } from '../../services/user.service';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import { User } from '../../models/user.model';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {HttpClient} from '@angular/common/http';
@@ -22,6 +22,7 @@ export class PostListComponent implements OnInit {
   groupService = inject(GroupService);
   postService = inject(PostService);
   httpClient = inject(HttpClient);
+  router = inject(Router);
 
   user: any = null;
   groups: any[] = [];
@@ -42,12 +43,10 @@ export class PostListComponent implements OnInit {
 
 
   ngOnInit() {
-    console.log('PostListComponent initialized')
     this.authenticationService.connectedUser.subscribe(user => {
       if (user) {
         this.userService.findById(user.id).subscribe(fullUser => {
           this.connectedUser = fullUser;
-          console.log('connectedUser:', this.connectedUser);
           this.userService.getGroupsByUserId(fullUser.id).subscribe(groups => {
             this.groups = groups;
 
@@ -113,7 +112,6 @@ export class PostListComponent implements OnInit {
 
     this.postService.getPostsOfUserGroup(groupId).subscribe({
       next: (response: any) => {
-        console.log('API response groups:', response);
         this.posts = response.member;
 
         for (const post of this.posts) {
@@ -144,8 +142,6 @@ export class PostListComponent implements OnInit {
       name: this.groupFormGroup.value.name,
     };
 
-
-    console.log('Nouveau groupe à créer:', newGroup);
     this.groupService.save(newGroup).subscribe({
       next: (savedGroup) => {
         this.groups.push(savedGroup);

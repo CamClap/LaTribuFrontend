@@ -9,83 +9,105 @@
         type="text"
         placeholder="janesmith"
         class="flex-1 block w-full rounded-r-md border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-      />
+        />
+      </div>
+      @if (userFormGroup.get('name')?.invalid && (userFormGroup.get('name')?.touched || userFormGroup.get('name')?.dirty)) {
+        <div class="text-red-600 text-sm mt-1">
+          @if (userFormGroup.get('name')?.errors?.['required']) {
+            <div>Le nom est obligatoire.</div>
+          }
+          @if (userFormGroup.get('name')?.errors?.['minlength']) {
+            <div>Le nom doit contenir au moins 3 caractères.</div>
+          }
+        </div>
+      }
     </div>
-    <div *ngIf="userFormGroup.get('name')?.invalid && (userFormGroup.get('name')?.touched || userFormGroup.get('name')?.dirty)" class="text-red-600 text-sm mt-1">
-      <div *ngIf="userFormGroup.get('name')?.errors?.['required']">Le nom est obligatoire.</div>
-      <div *ngIf="userFormGroup.get('name')?.errors?.['minlength']">Le nom doit contenir au moins 3 caractères.</div>
-    </div>
-  </div>
-  <div class="mb-5">
-    <label for="nickname" class="block text-sm font-medium text-gray-700">Surnom</label>
-    <div class="mt-1 flex rounded-md shadow-sm">
-      <input
-        id="nickname"
-        formControlName="nickname"
-        type="text"
-        placeholder="nickname"
-        class="flex-1 block w-full rounded-r-md border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-      />
-    </div>
-    <div *ngIf="userFormGroup.get('nickname')?.invalid && (userFormGroup.get('nickname')?.touched || userFormGroup.get('nickname')?.dirty)" class="text-red-600 text-sm mt-1">
-      <div *ngIf="userFormGroup.get('nickname')?.errors?.['minlength']">Le surnom doit contenir au moins 3 caractères.</div>
-    </div>
-  </div>
-  <div class="mb-5">
-    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-    <input
-      type="email"
-      id="email"
-      formControlName="email"
-      placeholder="example@mail.com"
-      class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-    />
-    <div *ngIf="userFormGroup.get('email')?.invalid && (userFormGroup.get('email')?.touched || userFormGroup.get('email')?.dirty)" class="text-red-600 text-sm mt-1">
-      <div *ngIf="userFormGroup.get('email')?.errors?.['required']">L'email est obligatoire.</div>
-      <div *ngIf="userFormGroup.get('email')?.errors?.['email']">L'email n'est pas valide.</div>
-    </div>
-  </div>
-  <div class="mb-5">
-    <label for="password" class="block text-sm font-medium text-gray-700">Mot de passe</label>
-    <input
-      id="password"
-      formControlName="password"
-      type="password"
-      placeholder=""
-      class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-    />
-    <div *ngIf="userFormGroup.get('password')?.invalid && (userFormGroup.get('password')?.touched || userFormGroup.get('password')?.dirty)" class="text-red-600 text-sm mt-1">
-      <div *ngIf="userFormGroup.get('password')?.errors?.['required']">Le mot de passe est obligatoire.</div>
-      <div *ngIf="userFormGroup.get('password')?.errors?.['passwordInvalid']">Le mot de passe doit contenir au moins 6 caractères, des lettres et des chiffres.</div>
-    </div>
-  </div>
-  <div class="mb-6">
-    <label for="photo" class="block text-sm font-medium text-gray-700">Photo de profil</label>
-    <div class="mt-2 flex items-center gap-4">
-      <button
-        type="button"
-        class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm rounded-md shadow-sm"
-        (click)="photoinput.click()"
-      >
-        Choisir un fichier
-      </button>
-      <input type="file" hidden #photoinput (change)="onPhoto(photoinput.files)" />
-    </div>
-  </div>
-  <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 mt-6">
-    <button
-      type="button"
-      class="text-gray-600 hover:text-gray-800 text-sm font-medium"
-      (click)="onCancel()"
-    >
-      Annuler
-    </button>
-    <button
-      type="submit"
-      class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-4 py-2 rounded-md shadow-sm text-sm"
-      (click)="onSubmit()"
-    >
-      Valider
-    </button>
-  </div>
-</form>
+    <div class="mb-5">
+      <label for="nickname" class="block text-sm font-medium text-gray-700">Surnom</label>
+      <div class="mt-1 flex rounded-md shadow-sm">
+        <input
+          id="nickname"
+          formControlName="nickname"
+          type="text"
+          placeholder="nickname"
+          class="flex-1 block w-full rounded-r-md border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          />
+        </div>
+        @if (userFormGroup.get('nickname')?.invalid && (userFormGroup.get('nickname')?.touched || userFormGroup.get('nickname')?.dirty)) {
+          <div class="text-red-600 text-sm mt-1">
+            @if (userFormGroup.get('nickname')?.errors?.['minlength']) {
+              <div>Le surnom doit contenir au moins 3 caractères.</div>
+            }
+          </div>
+        }
+      </div>
+      <div class="mb-5">
+        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          placeholder="example@mail.com"
+          class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          />
+          @if (userFormGroup.get('email')?.invalid && (userFormGroup.get('email')?.touched || userFormGroup.get('email')?.dirty)) {
+            <div class="text-red-600 text-sm mt-1">
+              @if (userFormGroup.get('email')?.errors?.['required']) {
+                <div>L'email est obligatoire.</div>
+              }
+              @if (userFormGroup.get('email')?.errors?.['email']) {
+                <div>L'email n'est pas valide.</div>
+              }
+            </div>
+          }
+        </div>
+        <div class="mb-5">
+          <label for="password" class="block text-sm font-medium text-gray-700">Mot de passe</label>
+          <input
+            id="password"
+            formControlName="password"
+            type="password"
+            placeholder=""
+            class="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
+            @if (userFormGroup.get('password')?.invalid && (userFormGroup.get('password')?.touched || userFormGroup.get('password')?.dirty)) {
+              <div class="text-red-600 text-sm mt-1">
+                @if (userFormGroup.get('password')?.errors?.['required']) {
+                  <div>Le mot de passe est obligatoire.</div>
+                }
+                @if (userFormGroup.get('password')?.errors?.['passwordInvalid']) {
+                  <div>Le mot de passe doit contenir au moins 6 caractères, des lettres et des chiffres.</div>
+                }
+              </div>
+            }
+          </div>
+          <div class="mb-6">
+            <label for="photo" class="block text-sm font-medium text-gray-700">Photo de profil</label>
+            <div class="mt-2 flex items-center gap-4">
+              <button
+                type="button"
+                class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm rounded-md shadow-sm"
+                (click)="photoinput.click()"
+                >
+                Choisir un fichier
+              </button>
+              <input type="file" hidden #photoinput (change)="onPhoto(photoinput.files)" />
+            </div>
+          </div>
+          <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 mt-6">
+            <button
+              type="button"
+              class="text-gray-600 hover:text-gray-800 text-sm font-medium"
+              (click)="onCancel()"
+              >
+              Annuler
+            </button>
+            <button
+              type="submit"
+              class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-4 py-2 rounded-md shadow-sm text-sm"
+              (click)="onSubmit()"
+              >
+              Valider
+            </button>
+          </div>
+        </form>

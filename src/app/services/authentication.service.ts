@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import { BehaviorSubject, Observable, map, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { JwtPayload, jwtDecode } from 'jwt-decode';
+import {Router} from '@angular/router';
 
 export interface ConnectedUser {
   accessToken: string;
@@ -31,8 +32,10 @@ export class AuthenticationService {
 
   connectedUser = new BehaviorSubject<ConnectedUser | undefined>(undefined);
   private url = environment.backendUrl + "/auth";
+  httpClient = inject(HttpClient);
+  router = inject(Router);
 
-  constructor(private httpClient: HttpClient) { }
+
 
   init() {
     const json = localStorage.getItem('user');
@@ -81,5 +84,6 @@ export class AuthenticationService {
   logout() {
     localStorage.removeItem('user');
     this.connectedUser.next(undefined);
+    this.router.navigateByUrl("/");
   }
 }

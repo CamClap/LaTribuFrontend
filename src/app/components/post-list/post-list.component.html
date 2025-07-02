@@ -58,28 +58,51 @@
         }
       }
       @else {
-        <div class="mt-4">
-          <p class="text-red-600 mb-4 text-center">
-            Vous n'avez pas encore de groupe.
-          </p>
-
-          <form [formGroup]="groupFormGroup" (ngSubmit)="createGroup()" class="flex items-center gap-4 justify-center">
-            <input
-              type="text"
-              formControlName="name"
-              required
-              placeholder="Nom du groupe"
-              class="border border-gray-300 px-3 py-2 rounded-md w-full max-w-xs"
-            />
+        @if (user.roles.includes('ROLE_ADMIN')){
+          <div class="flex justify-center gap-2">
             <button
-              type="submit"
-              [disabled]="groupFormGroup.invalid"
-              class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
-              Créer
+              (click)="router.navigate(['/manage-users'])"
+              class="bg-orange-600 text-white px-3 py-1.5 rounded-md text-sm hover:bg-orange-700 transition">
+              Gérer user
             </button>
-          </form>
-        </div>
+
+            <button
+              class="bg-orange-600 text-white px-3 py-1.5 rounded-md text-sm hover:bg-orange-700 transition">
+              Gérer les posts
+            </button>
+
+            <button
+              class="bg-orange-600 text-white px-3 py-1.5 rounded-md text-sm hover:bg-orange-700 transition">
+              Gérer les groupes
+            </button>
+          </div>
+
+        }
+        @else {
+          <div class="mt-4">
+            <p class="text-red-600 mb-4 text-center">
+              Vous n'avez pas encore de groupe.
+            </p>
+
+            <form [formGroup]="groupFormGroup" (ngSubmit)="createGroup()" class="flex items-center gap-4 justify-center">
+              <input
+                type="text"
+                formControlName="name"
+                required
+                placeholder="Nom du groupe"
+                class="border border-gray-300 px-3 py-2 rounded-md w-full max-w-xs"
+              />
+              <button
+                type="submit"
+                [disabled]="groupFormGroup.invalid"
+                class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
+                Créer
+              </button>
+            </form>
+          </div>
+        }
       }
+
     </div>
   }
   @else {

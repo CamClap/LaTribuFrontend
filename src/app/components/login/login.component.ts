@@ -32,7 +32,6 @@ export class LoginComponent {
         }
       });
     } else
-      console.log("user unknow"),
         this.userFormGroup.markAllAsTouched();
   }
 }

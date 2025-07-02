@@ -5,7 +5,6 @@ import { AuthenticationService } from './services/authentication.service';
 import { UserService } from './services/user.service';
 import { GroupService } from './services/group.service';
 import { PostService } from './services/post.service';
-import { Post } from './models/post.model';
 
 @Component({
   selector: 'app-root',
@@ -15,25 +14,12 @@ import { Post } from './models/post.model';
 })
 export class AppComponent {
   authenticationService = inject(AuthenticationService);
-  groupService = inject(GroupService);
-  userService = inject(UserService);
-  postService = inject(PostService);
   title = 'latribu_Frontend';
   router = inject(Router);
 
 
   groups: any[] = [];
-  userId: number | null = null;
-
-
-  connectedUser$ = this.authenticationService.connectedUser.asObservable();
   userPicture: string | null = null;
-
-
-  constructor() {
-
-  }
-
 
 
   onPhotoError(event: Event) {

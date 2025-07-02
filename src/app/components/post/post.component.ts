@@ -43,21 +43,15 @@ export class PostComponent implements OnInit{
 
   ngOnInit() {
     this.currentUser = this.authService.getCurrentPersonSync();
-    console.log('Utilisateur connecté:', this.currentUser);
 
     if (!this.currentUser) {
-      console.warn("Utilisateur non connecté");
       return;
     }
 
     this.groupService.getGroupsByUser(this.currentUser.id).subscribe({
       next: (groups) => {
-        console.log("Groupes récupérés pour l'utilisateur :", groups);
         if (groups && groups.length > 0) {
           this.selectedGroup = groups[0];
-          console.log("Premier groupe sélectionné :", this.selectedGroup);
-        } else {
-          console.warn("Aucun groupe trouvé pour cet utilisateur.");
         }
       },
       error: (err) => {
@@ -66,16 +60,8 @@ export class PostComponent implements OnInit{
     });
   }
 
-
   onReady(editor: any) {
     console.log("CKEditor is ready!");
-  }
-
-  onFileSelected(event: Event) {
-    const fileInput = event.target as HTMLInputElement;
-    if (fileInput.files && fileInput.files.length > 0) {
-      this.selectedFile = fileInput.files[0];
-    }
   }
 
   createPost() {
@@ -83,18 +69,17 @@ export class PostComponent implements OnInit{
       alert("Vous devez être connecté");
       return;
     }
-console.log(this.form);
     if (this.form.invalid) {
       alert("Le formulaire est incomplet");
       return;
     }
-
     const today = new Date();
 
     if (!this.selectedGroup) {
       alert("Aucun groupe sélectionné !");
       return;
     }
+
     const newPost: Post = {
 
       title: this.postTitle || 'Titre par défaut',
@@ -104,7 +89,7 @@ console.log(this.form);
       groupOfPost: `/api/groups/${this.selectedGroup?.id}`,
       date: today
     };
-    console.log(newPost);
+
 
     this.postService.save(newPost).subscribe({
       next: () => {

@@ -56,7 +56,6 @@ export class UserService {
   }
 
   getPhotoUrl(user: { id: number, picture?: string }): string {
-    console.log(user.picture);
     return user?.picture
       ? `http://localhost:8080/files/${user.picture}`
       : this.getDefaultPhotoForUser(user.id);
@@ -67,17 +66,6 @@ export class UserService {
       headers: { 'Content-Type': 'application/json' }
     });
   }
-
-/**
-  save(user: Partial<User>, photo?: File): Observable<User> {
-    const data = new FormData();
-    data.append("user", new Blob([JSON.stringify(user)], { type: "application/json" }));
-    if (photo) {
-      data.append("photo", photo, photo.name);
-    }
-    return this.httpClient.post<User>(this.url, data);
-  }*/
-
 
   update(user: Partial<User>, photo?: File): Observable<User> {
   const data = new FormData();
